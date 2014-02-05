@@ -1,0 +1,191 @@
+{
+    "core": [
+        {
+            "id": 1,
+            "name": "Noise",
+            "type": "Identity",
+            "subtype": "G-mod",
+            "faction": "Anarch",
+            "minimum_deck": 45,
+            "influence_limit": 15,
+            "link_strength": 0,
+            "text": "Whenever you install a **virus** program, the Corp trashes the top card of R&D",
+            "subtext": "Watch this. It'll be funny.",
+            "eca": [
+                {
+                    "event": "card_install:type(virus)",
+                    "action": "opponent:deck:discard(1)",
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Deja Vu",
+            "type": "Event",
+            "cost": 2,
+            "influence": 2,
+            "faction": "Anarch",
+            "text": "Add 1 card (or up to 2 **virus** cards) from your heap to your grip.",
+            "subtext": "Anything worth doing is worth doing twice.",
+            "eca": [
+                {
+                    "action": "choice(+, hand):deck:discarded",
+                    "choice-condition": "1 Card OR 2 Card(virus)"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Demolition Run",
+            "type": "Event",
+            "subtype": ["Run", "Sabotage"],
+            "cost": 2,
+            "influence": 2,
+            "faction": "Anarch",
+            "text": "Make a run on HQ or R&D. You may trash, at no cost, any cards you access(even if the cards cannot normally be trashed).",
+            "subtext": "You ever set somthing on fire just to watch it burn?",
+            "eca": [
+                {
+                    "event": "trash",
+                    "condition": "e.location == 'HQ' || e.location == 'R&D'",
+                    "modify": "",
+                    "action": "runner:action(run)"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "Stimhack",
+            "type": "Event",
+            "subtype": "Run",
+            "cost": 0,
+            "influence": 1,
+            "faction": "Anarch",
+            "text": "Make a run, and gain 9money, which you may use only during this run. After the run is completed, suffer 1 brain damage(cannot be prevented) and return to the bank any of the 9money not spent.",
+            "eca": [
+                {
+                    /* The ~ means it's temporary money */
+                    "action": "counters:~+money(9)",
+                    "action": "runner:action(run)",
+                    "post": "counters:+brainDamage(1)"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "Cyberfeeder",
+            "type": "Hardware",
+            "subtype": "Chip",
+            "cost": 2,
+            "influence": 1,
+            "faction": "Anarch",
+            "text": "Use this credit to pay for using **icebreakers** or for installing **virus** programs.",
+            "subtext": "I feel almost naked without it.",
+            "eca": [
+                {
+                    "action": "recurring_credits(1):used_for_events(['icebreaker:use', 'card_install:virus'])"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "name": "Grimoire",
+            "type": "Hardware",
+            "subtype": "Console",
+            "unique": true,
+            "cost": 3,
+            "influence": 2,
+            "faction": "Anarch",
+            "text": "Whenever you install a virus program, place 1 virus counter on that program.\nLimit 1 console per player.",
+            "subtext": "My little book of magic spells. -The Whizzard",
+            "eca": [
+                {
+                    "event": "card_installed:virus",
+                    "condition": "",
+                    "action": "last_card_installed:add_virus_counter"
+                },
+                {
+                    "action": "stat_increase:ram"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "name": "Corroder",
+            "type": "Icebreaker",
+            "subtype": "Fracter",
+            "cost": 2,
+            "ram": 1,
+            "strength": 2,
+            "influence": 2,
+            "faction": "Anarch",
+            "text": "1money: Break **barrier** subroutine.\n1money: +1 strength",
+            "subtext": "If at first you don't succeed, boost its strength and try again. -g00ru",
+            "eca": [
+                {
+                    "cost": 1,
+                    "action": "break_subroutine(barrier)",
+                },
+                {
+                    "cost": 1,
+                    "action": "card_self:temp_increase(strength)"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "name": "Datasucker",
+            "type": "Program",
+            "subtype": "Virus",
+            "cost": 1,
+            "ram": 1,
+            "influence": 1,
+            "faction": "Anarch",
+            "text": "Whenever you make a successful run on a central server, place 1 virus counter on Datasucker.\n**Hosted virus counter:** Rezzed piece of ice currently being encountered has -1 strength until the end of the encounter.",
+            "eca": [
+                {
+                    "event": "successful_run:central",
+                    "condition": "",
+                    "action": "card_self:add_virus_counter"
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "name": "Djinn",
+            "type": "Program",
+            "subtype": "Daemon",
+            "cost": 2,
+            "ram": 1,
+            "influence": 2,
+            "faction": "Anarch",
+            "text": "Djinn can host up to 3ram of non-icebreaker programs.\nThe memory costs of hosted programs do not count against your memory limit.\n~click~, 1money: Search your stack for a virus program, reveal it, and add it to your grip. Shuffle your stack.",
+            "eca": [
+                {
+                    "cost": ["click", 1],
+                    "action": "deck_search:virus"
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "name": "Medium",
+            "type": "Program",
+            "subtype": "Virus",
+            "cost": 3,
+            "ram": 1,
+            "influence": 3,
+            "faction": "Anarch",
+            "text": "Whenever you make a successful run on R&D, place 1 virus counter on Medium.\nEach virus counter after the first on MEdium allows you to access 1 additional card from R&D whenever you access cards from R&D.",
+            "subtype": "It looked like random packet loss. It wasn't.",
+            "eca": [
+                {
+                    "event": "successful_run:rad",
+                    "condition": "",
+                    "action": "access_rad:additional(card_self(virus))"
+                }
+            ]
+        }
+    ]
+
+}

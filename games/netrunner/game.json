@@ -1,0 +1,14 @@
+{
+    "name": "Android: Netrunner",
+    "players": 2,
+    "version": 0.01,
+    "two-sided": true,
+
+    "player_config": {
+        "start": {
+            "hand_size": 5,
+            "credits": 5
+        }
+    }
+
+}
